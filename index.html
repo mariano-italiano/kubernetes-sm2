@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kubernetes Training</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+
+<style>
+    *{
+        margin:0; padding:0; box-sizing:border-box;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    body{
+        background: linear-gradient(135deg,#1E3C72,#2A5298,#6DD5FA,#2980B9);
+        background-size: 400% 400%;
+        animation: gradientMove 14s ease infinite;
+        color:white;
+    }
+
+    @keyframes gradientMove {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+
+    header{
+        text-align:center;
+        padding:120px 20px;
+    }
+
+    header h1{
+        font-size:4rem;
+        font-weight:800;
+        text-shadow:0 0 20px rgba(255,255,255,0.6);
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%{transform:translateY(0);}
+        50%{transform:translateY(-15px);}
+        100%{transform:translateY(0);}
+    }
+
+    .btn{
+        display:inline-block;
+        margin-top:30px;
+        padding:18px 40px;
+        background:#00eaff;
+        color:#003f62;
+        font-size:1.3rem;
+        border-radius:50px;
+        font-weight:700;
+        cursor:pointer;
+        transition:0.3s;
+        box-shadow:0 0 20px rgba(0,234,255,0.7);
+    }
+
+    .btn:hover{
+        transform:scale(1.1);
+        background:white;
+        box-shadow:0 0 35px rgba(255,255,255,0.9);
+    }
+
+    section{
+        padding:80px 20px;
+        max-width:1100px;
+        margin:auto;
+    }
+
+    h2{
+        text-align:center;
+        margin-bottom:40px;
+        font-size:2.8rem;
+        text-shadow:0 0 15px rgba(255,255,255,0.5);
+    }
+
+    .features{
+        display:flex;
+        justify-content:space-around;
+        flex-wrap:wrap;
+    }
+
+    .feature{
+        width:300px;
+        padding:25px;
+        background:rgba(255,255,255,0.1);
+        border-radius:20px;
+        text-align:center;
+        margin:20px;
+        backdrop-filter: blur(10px);
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .feature:hover{
+        transform:translateY(-10px) scale(1.05);
+        background:rgba(255,255,255,0.25);
+    }
+
+    .feature i{
+        font-size:3rem;
+        margin-bottom:15px;
+    }
+
+    #interactive-box{
+        text-align:center;
+        padding:40px;
+        border-radius:20px;
+        background:rgba(0,0,0,0.25);
+        margin-top:40px;
+        transition:0.3s;
+    }
+
+    footer{
+        text-align:center;
+        padding:40px;
+        font-size:1.1rem;
+        opacity:0.8;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Kubernetes Training</h1>
+    <div class="btn" onclick="scrollToSection()">Zaczynamy!</div>
+</header>
+
+<section id="about">
+    <h2>🚀 Dlaczego Kubernetes?</h2>
+    <p style="font-size:1.4rem; text-align:center;">
+        Najbardziej pożądana technologia w świecie DevOps, chmur i automatyzacji.  
+        Z nami ogarniesz K8s od podstaw po poziom PRO.
+    </p>
+
+    <div class="features">
+        <div class="feature">
+            <i>📦</i>
+            <h3>Deploy jak mistrz</h3>
+            <p>Poznasz Deploymenty, StatefulSety, Volumes, ConfigMaps i inne sztuczki.</p>
+        </div>
+        <div class="feature">
+            <i>🔧</i>
+            <h3>Networking & Services</h3>
+            <p>LoadBalancer, Ingress, NodePort – w końcu to będzie proste.</p>
+        </div>
+        <div class="feature">
+            <i>⚙️</i>
+            <h3>Production ready</h3>
+            <p>Monitoring, autoscaling, HA, RBAC – pełen profesjonalizm.</p>
+        </div>
+    </div>
+
+    <!-- Interaktywny box -->
+    <div id="interactive-box">
+        <h3>🎮 Kliknij, aby odkryć losowy kubernetesowy pro-tip!</h3>
+        <p id="tip" style="margin-top:20px; font-size:1.3rem; font-weight:600;"></p>
+        <div class="btn" style="margin-top:25px;" onclick="newTip()">Dawaj tipa 🔥</div>
+    </div>
+</section>
+
+<footer>
+    © 2025 Kubernetes Training – Made with ❤️ & K8s vibes
+</footer>
+
+<script>
+    function scrollToSection(){
+        document.querySelector("#about").scrollIntoView({behavior:"smooth"});
+    }
+
+    const tips = [
+        "Używaj livenessProbe, aby restartować zwieszone kontenery!",
+        "Namespace’y to twoi najlepsi przyjaciele przy separacji środowisk.",
+        "kubectl explain <resource> – najlepsza dokumentacja offline.",
+        "Stosuj resource limits, aby uniknąć dramatu na produkcji.",
+        "Ingress + cert-manager = darmowy HTTPS jak złoto.",
+        "HorizontalPodAutoscaler to magia autoscalingu CPU/RAM.",
+        "Labels i selectors to fundament selekcji obiektów."
+    ];
+
+    function newTip(){
+        document.getElementById("tip").textContent = tips[Math.floor(Math.random()*tips.length)];
+    }
+</script>
+
+</body>
+</html>
