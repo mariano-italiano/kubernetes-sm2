@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - dogs.192.168.189.128.nip.io
+    secretName: myweb-ssl-cert
+  rules:
+  - host: cats.192.168.189.128.nip.io 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cats-svc
+            port:
+              number: 80
+  - host: dogs.192.168.189.128.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: dogs-svc
+            port:
+              number: 80
