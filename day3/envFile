@@ -1,0 +1,7 @@
+# parameters for app1
+testdir=/opt/test
+appName=APP1_WEB_FRONTEND
+
+# params for app2
+branch=develop
+path=/test/app2

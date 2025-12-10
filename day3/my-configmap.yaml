@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  key1: value1
+  version: "2.1" 
+  config.json: |
+    { "attr1": "val1",
+      "attr2": "val2" }
+  multiline: |
+    sdfsadf asdf
+     asfsadf sdf
+     sa fasf sad f
+     as fsa df
+     sa asfd
+  
