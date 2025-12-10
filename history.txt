@@ -1,0 +1,732 @@
+  134  cat /etc/os-release 
+  135  lsmod 
+  136  lsmod | grep -e overlay -e netfilter
+  137  modprobe br_netfilter 
+  138  sudo modprobe br_netfilter 
+  139  lsmod | grep -e overlay -e netfilter
+  140  sudo vi /etc/modules-load.d/kuberentes.conf
+  141  sysctl -a | grep -e forward -e nf-call 
+  142  sudo vi /etc/sysctl.d/99-kubernetes.conf
+  143  sudo sysctl --system
+  144  swapon -s 
+  145  vi /etc/fstab 
+  146  apt-get update
+  147  sudo apt-get update
+  148  sudo apt-get install containerd
+  149  sudo systemctl status containerd
+  150  vi /etc/containerd/config.toml 
+  151  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  152  sudo vi /etc/containerd/config.toml 
+  153  sudo systemctl restart containerd
+  154  systemctl status containerd
+  155  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  156  +cat /etc/apt/sources.list.d/kubernetes.list
+  157  cat /etc/apt/sources.list.d/kubernetes.list
+  158  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  159  sudo apt-get update
+  160  sudo apt-cache madison kubeadm
+  161  sudo apt-get install kubeadm=1.32.8-1.1 kubelet=1.32.8-1.1 kubectl=1.32.8-1.1 
+  162  sudo apt-mark hold kubelet kubeadm kubectl 
+  163  sudo kubeadm init --help
+  164  sudo kubeadm init --pod-network-cidr 192.168.0.0/12
+  165  sudo kubeadm reset -f 
+  166  sudo apt-get install apt-transport-https curl -y
+  167  df -h
+  168  lsblk
+  169  vgs
+  170  sudo vgs
+  171  sudo lvextend -l100%FREE /dev/ubuntu-vg/ubuntu-lv
+  172  sudo vgs
+  173  sudo lvextend -l+100%FREE /dev/ubuntu-vg/ubuntu-lv
+  174  df -hT
+  175  sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
+  176  df -h
+  177  sudo kubeadm init --pod-network-cidr 192.168.0.0/12
+  178  mkdir -p $HOME/.kube
+  179  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  180  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  181  kubectl get nodes
+  182  kubectl get po -A
+  183  CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+  184  CLI_ARCH=amd64
+  185  if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+  186  curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  187  sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+  188  sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+  189  rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  190  cilium install 
+  191  watch -n1 kubectl get po -A
+  192  kubectl get cm -A 
+  193  kubectl edit cm -n kube-system coredns 
+  194  watch -n1 kubectl get po -A
+  195  kubectl get nodes
+  196  sudo kubeadm token create --print-join-command
+  197  watch -n1 kubectl get po -A
+  198  watch -n1 kubectl get po -A -o wide
+  199  kubectl get nodes
+  200  watch -n1 kubectl get po -A -o wide
+  201  kubectl get nodes
+  202  watch -n1 kubectl get po -A -o wide
+  203  watch -n1 kubectl get po -A
+  204  kubectl get nodes
+  205  sudo apt-get install bash-completion
+  206  echo 'source <(kubectl completion bash)' >>~/.bashrc
+  207  source ~/.bashrc
+  208  kubectl run test-pod --image nginx 
+  209  kubectl get ns
+  210  kubectl get po 
+  211  kubectl get po -o wide 
+  212  kubectl get po -o wide --show-labels 
+  213  kubectl describe pod test-pod 
+  214  kubectl run ubuntu --image ubuntu -o yaml --dry-run=client 
+  215  git  clone https://github.com/mariano-italiano/kubernetes-sm2.git
+  216  cd kubernetes-sm2/
+  217  mkdir day1
+  218  cd day1
+  219  kubectl run ubuntu --image ubuntu -o yaml --dry-run=client > ubuntu.yaml
+  220  vi ubuntu.yaml 
+  221  kubectl apply -f ubuntu.yaml 
+  222  kubectl get po
+  223  watch -n1 kubectl get po
+  224  vi ubuntu.yaml 
+  225  tail -F /tmp/test 
+  226  tail -f /tmp/test 
+  227  tail -F /tmp/test 
+  228  kubectl replace --force -f ubuntu.yaml 
+  229  watch -n1 kubectl get po
+  230  kubectl exec -it ubuntu -- bash
+  231  vi ubuntu.yaml 
+  232  kubectl replace --force -f ubuntu.yaml 
+  233  kubectl exec -it ubuntu -- bash
+  234  kubectl edit pod ubuntu 
+  235  kubectl api-resources 
+  236  kubectl api-resources | grep cronjob 
+  237  kubectl apply -f ubuntu.yaml -n kube-system 
+  238  kubectl get po -A
+  239  kubectl --v=7 get pod 
+  240  kubectl cluster-info 
+  241  kubectl --v=9 get pod 
+  242  curl -v -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' 
+  243  curl -kv -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' 
+  244  kubectl cluster-info 
+  245  vi $HOME/.kube/config
+  246  echo 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJR1VYVU5DU2lHVjh3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TlRFeU1EZ3hNREEzTlRWYUZ3MHpOVEV5TURZeE1ERXlOVFZhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUURLRzViQllZT3drSERWVDRYOXc0azZKbU5GbTZId2o0R2c4VU5TcWdkYzkranRvc3BGYXdXak5aa3YKdW84RUxzNXBKU3VCVkVCSGVWcHViSGR2OHRGc2hveHhoajBUbjZFRi9Xd1JNbkZGMzYyc3kva1BtektNb2ZnOAptV0NpWlF6VXFpSmxvdHhTeDUrZkFWa1lXV1hCaHN2WWpKeWpJMkZvc2xPNExNSG9sZDNUN0p3OGsweXl5MzlKCllsNU1DY20zckdEY29qSUZlTS9ydFB1Y2RHVWhPaXdqOEttbzhra29KRW5XdFFxbWVPNnMwNlU3TXV2eW0rSHIKWEc2MTl5UU96RHhyN2cxaXg5N2lnMXFqSkN4R3NSRFZxLzZlTWxCTW8xZ0hBQmJFY3NtNndOY0I2UlE1eVYxSgpkRm1MUVVHd0dwMG9uOFBMdWZsek9yeEFkbDAvQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUbTQ0L2dCSWxjWkJRbzdwRVRqZkkyaVd1UjhUQVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ1FEeDcwakZLOQprcThMakRORENJb0NyTHEzbnpQU3dzcXk0NlRUaEs3dk1heHI0TkpaRkFIREdwTFJLVDFyY3Yra0hzUkFmMHdXCjZHdnExRWI1R24wQ3VBZVhXSC84QWZtYmZlM2x6aFdBS0JLeWZza1ZGaVFSQjQydGZ6VEU2ei94RzJHcStjNlUKaDRtVjlITTFUNW92T1BwQVpOUUJLcFFBVlZlSWVOYURqUGVmZzZWOXJaY2ZDait6YVI3bEFxSTE0bjNnai9IaQpNUDMxNHJOK3JUL1hsUTVtTm1LNlBmYVZyTHE0UExLa3JaSWlmUEJ1encxa0p2Wjc5bVJpWDMyNUpkenlxaEdHCnAzMVlBWlhhYVdjdUhGcEZpTEg2a2NkblduY1FPMXVCTDV0YlFKSHNRelcvY1ZNN1IybkFpaVU1UlRqVlNJUzEKYXFFNWRuYmVPZnVWCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K' | base64 -d 
+  247  echo 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJR1VYVU5DU2lHVjh3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TlRFeU1EZ3hNREEzTlRWYUZ3MHpOVEV5TURZeE1ERXlOVFZhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUURLRzViQllZT3drSERWVDRYOXc0azZKbU5GbTZId2o0R2c4VU5TcWdkYzkranRvc3BGYXdXak5aa3YKdW84RUxzNXBKU3VCVkVCSGVWcHViSGR2OHRGc2hveHhoajBUbjZFRi9Xd1JNbkZGMzYyc3kva1BtektNb2ZnOAptV0NpWlF6VXFpSmxvdHhTeDUrZkFWa1lXV1hCaHN2WWpKeWpJMkZvc2xPNExNSG9sZDNUN0p3OGsweXl5MzlKCllsNU1DY20zckdEY29qSUZlTS9ydFB1Y2RHVWhPaXdqOEttbzhra29KRW5XdFFxbWVPNnMwNlU3TXV2eW0rSHIKWEc2MTl5UU96RHhyN2cxaXg5N2lnMXFqSkN4R3NSRFZxLzZlTWxCTW8xZ0hBQmJFY3NtNndOY0I2UlE1eVYxSgpkRm1MUVVHd0dwMG9uOFBMdWZsek9yeEFkbDAvQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUbTQ0L2dCSWxjWkJRbzdwRVRqZkkyaVd1UjhUQVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ1FEeDcwakZLOQprcThMakRORENJb0NyTHEzbnpQU3dzcXk0NlRUaEs3dk1heHI0TkpaRkFIREdwTFJLVDFyY3Yra0hzUkFmMHdXCjZHdnExRWI1R24wQ3VBZVhXSC84QWZtYmZlM2x6aFdBS0JLeWZza1ZGaVFSQjQydGZ6VEU2ei94RzJHcStjNlUKaDRtVjlITTFUNW92T1BwQVpOUUJLcFFBVlZlSWVOYURqUGVmZzZWOXJaY2ZDait6YVI3bEFxSTE0bjNnai9IaQpNUDMxNHJOK3JUL1hsUTVtTm1LNlBmYVZyTHE0UExLa3JaSWlmUEJ1encxa0p2Wjc5bVJpWDMyNUpkenlxaEdHCnAzMVlBWlhhYVdjdUhGcEZpTEg2a2NkblduY1FPMXVCTDV0YlFKSHNRelcvY1ZNN1IybkFpaVU1UlRqVlNJUzEKYXFFNWRuYmVPZnVWCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K' | base64 -d - > ca.pem
+  248  vi ca.pem 
+  249  grep client-cert $HOME/.kube/config | cut -d " " -f 6 
+  250  grep client-cert $HOME/.kube/config | cut -d " " -f 6 | base64 -d - > client.pem 
+  251  vi client.pem
+  252  grep client-key-data $HOME/.kube/config | cut -d " " -f 6 | base64 -d - > client.key 
+  253  vi client.key
+  254  curl -kv -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' 
+  255  curl -k -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' 
+  256  curl -k --cert client.pem --key client.key --cacert ca.pem -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' 
+  257  curl -k --cert client.pem --key client.key --cacert ca.pem -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' | jq -r '.items[].metadata.name'
+  258  curl --silent -k --cert client.pem --key client.key --cacert ca.pem -XGET 'https://192.168.189.128:6443/api/v1/namespaces/default/pods?limit=500' | jq -r '.items[].metadata.name'
+  259  kubectl get po 
+  260  kubectl get node --v9
+  261  kubectl get node --v=9
+  262  curl --silent -k --cert client.pem --key client.key --cacert ca.pem -XGET 'https://192.168.189.128:6443/api/v1/nodes?limit=500' | jq -r '.items[].metadata.name'
+  263  kubectl create cm test --from-literal tst-cm --v=9
+  264  kubectl create cm test --from-literal tst=cm --v=9
+  265  openssl genrsa -out marcin.key 
+  266  vi marcin.key 
+  267  openssl req -new -key marcin.key -out marcin.csr -sub "/CN=marcin"
+  268  openssl req -new -key marcin.key -out marcin.csr -subj "/CN=marcin"
+  269  vi marcin.csr 
+  270  cat marcin.csr  | base64 | tr -d '\n'
+  271  vi marcin-request-csr.yaml
+  272  kubectl apply -f marcin-request-csr.yaml 
+  273  kubectl get csr
+  274  kubectl certificate approve marcin-request-csr 
+  275  kubectl get csr
+  276  kubectl get csr marcin-request-csr -o yaml
+  277  kubectl get csr marcin-request-csr -o jsonpath='{.status.certificate}'
+  278  kubectl get csr marcin-request-csr -o jsonpath='{.status.certificate}' | base64 -d > marcin.crt
+  279  vi marcin.crt
+  280  sudo useradd -m -s /bin/bash marcin
+  281  sudo passwd marcin
+  282  kubectl get nodes --show-labels 
+  283  kubectl label node worker1 node-role.kubernetes.io/worker= 
+  284  kubectl get nodes --show-labels 
+  285  kubectl get nodes 
+  286  kubectl label node worker2 node-role.kubernetes.io/worker= 
+  287  kubectl get nodes 
+  288  kubectl describe node master 
+  289  kubectl get nodes
+  290  kubectl --kubeconfig marcin-config config set-cluster marcin-cluster --server=https://192.168.189.128:6443 --insecure-skip-tls-verify=true
+  291  vi marcin-config 
+  292  kubectl --kubeconfig marcin-config config set-credentials marcin --client-certificate marcin.crt --client-key marcin.key --embed-certs 
+  293  vi marcin-config 
+  294  kubectl --kubeconfig marcin-config config set-context marcin-context --cluster marcin-cluster --user=marcin 
+  295  kubectl --kubeconfig marcin-config config use-context marcin-context
+  296  kubectl config current-context 
+  297  vi marcin-config
+  298  kubectl create ns softwaremind 
+  299  kubectl create -n softwaremind role devops-role --help 
+  300  kubectl get po -o yaml
+  301  kubectl get po -w
+  302  watch -n1 kubectl get po
+  303  kubectl create deployment my-deploy --replicas 3 --image nginx:1.19.2 -o yaml --dry-run=client 
+  304  kubectl create -n softwaremind role devops-role --help 
+  305  kubectl create -n softwaremind role devops-role --verb=get,list,watch --resource=pods,deployments
+  306  kubectl get role -n softwaremind devops-role 
+  307  kubectl describe role -n softwaremind devops-role 
+  308  kubectl create -n softwaremind marcin-rolebinding --hel p\
+  309  kubectl create -n softwaremind marcin-rolebinding --help
+  310  kubectl create -n softwaremind rolebinding marcin-rolebinding --help
+  311  kubectl create -n softwaremind rolebinding marcin-rolebinding --role=devops-role --user=marcin 
+  312  kubectl describe rolebindings.rbac.authorization.k8s.io -n softwaremind marcin-rolebinding 
+  313  ls -la
+  314  cp marcin-config /tmp
+  315  cat marcin-config 
+  316  kubectl create -n softwaremind role devops-role --verb=get,list,watch --resource=configmap -o yaml --dry-run=client
+  317  kubectl edit role -n softwaremind devops-role 
+  318  kubectl get clusterrole
+  319  kubectl describe clusterrole view 
+  320  kubectl get p
+  321  cp -rp ubuntu.yaml busybox.yaml
+  322  vi busybox.yaml 
+  323  kubectl apply -f busybox.yaml
+  324  kubectl get po
+  325  watch -n1 kubectl get po
+  326  vi busybox.yaml 
+  327  kubectl replace --force -f busybox.yaml
+  328  kubectl get po
+  329  kubectl logs busybox 
+  330  kubectl logs busybox --all-com
+  331  kubectl logs busybox --all-containers 
+  332  cp -rp busybox.yaml sidecar-pod.yaml
+  333  vi sidecar-pod.yaml
+  334  kubectl apply -f sidecar-pod.yaml 
+  335  watch -n1 kubectl get po
+  336  kubectl logs sidecar-pod -c busybox1
+  337  kubectl exec -it sidecar-pod 
+  338  kubectl exec -it sidecar-pod -- bash
+  339  kubectl exec -it sidecar-pod -- sh
+  340  kubectl exec -it sidecar-pod -c sidecar -- sh
+  341  kubectl logs sidecar-pod --all-containers 
+  342  cp sidecar-pod.yaml init-container-pod.ymal
+  343  mv init-container-pod.ymal init-container-pod.yaml
+  344  vi init-container-pod.yaml
+  345  kubectl apply -f init-container-pod.yaml 
+  346  watch -n1 kubectl get p
+  347  watch -n1 kubectl get po
+  348  kubectl logs init-contianer-pod -c prepare-web
+  349  kubectl logs init-contianer-pod --all-containers 
+  350  kubectl get po
+  351  kubectl get po -o wide
+  352  kubectl explain pod
+  353  kubectl explain pod.spec
+  354  kubectl explain pod.spec.initContainers
+  355  kubectl replace --force -f init-container-pod.yaml 
+  356  kubectl get po -o wide
+  357  kubectl get po --show-labels 
+  358  kubectl get po --selector run
+  359  kubectl get po --selector run=ubuntu
+  360  kubectl label pod init-contianer-pod test=init-pod
+  361  kubectl label pod init-contianer-pod zone=az1
+  362  kubectl get po --show-labels 
+  363  kubectl label pod init-contianer-pod test- 
+  364  kubectl get po --show-labels 
+  365  kubectl label pod init-contianer-pod test123-=costam 
+  366  kubectl label pod init-contianer-pod test123=costam 
+  367  kubectl label po init-contianer-pod var1=value1 var2=value2
+  368  kubectl get po --show-labels 
+  369  kubectl delete pod -l run 
+  370  kubectl annotate pod init-contianer-pod appDescription="to jest jakas testowa apka pod szkolenie, data 8-10.12.2025, trener: MArcin "
+  371  kubectl describe pod init-contianer-pod 
+  372  kubectl annotate pod init-contianer-pod  version="1.0 ale tylko dla testow"
+  373  kubectl describe pod init-contianer-pod 
+  374  kubectl describe pod init-contianer-pod  | head
+  375  kubectl describe pod init-contianer-pod  | head -15
+  376  kubectl annotate po init-contianer-pod version-
+  377  kubectl describe pod init-contianer-pod  | head -15
+  378  kubectl get po -n kube-system 
+  379  kubectl get po -n kube-system --show-labels 
+  380  kubectl get po -n kube-system -l tier 
+  381  kubectl get po -n kube-system --show-labels -l tier 
+  382  kubectl get po -n kube-system --show-labels -l 'tier in(control-plane)'
+  383  kubectl get po -n kube-system --show-labels -l 'tier in(control-plane), component notin(etcd)'
+  384  kubectl get po -n kube-system --show-labels -l 'tier in(control-plane), component notin(etcd), component notin(kube-scheduler)'
+  385  ls -la 
+  386  cat ubuntu.yaml 
+  387  watch -n1 kubectl get po
+  388  kubectl get po -n kube-system 
+  389  kubectl get po
+  390  kubectl delete po ubuntu-worker1 
+  391  kubectl get po
+  392  watch -n1 kubectl get po
+  393  cd ..
+  394  git status
+  395  git pull
+  396  git config --global credentials.helper store
+  397  git status 
+  398  git add .
+  399  git commit -m "adding day1 files"
+  400  git config --global user.email "markuj5@gmail.com"
+  401  git commit -m "adding day1 files"
+  402  git push
+  403  watch -n1 kubectl get pod
+  404  kubectl get pod
+  405  kubectl get no
+  406  kubectl get po
+  407  kubectl get po --show-labels 
+  408  kubectl run web1 --image nginx 
+  409  kubectl get po --show-labels 
+  410  kubectl expose pod busybox --name busy-svc --port 80 
+  411  kubectl expose po web1 --name web1-clusterip-svc --port 80
+  412  kubectl get svc 
+  413  kubectl get svc web1-clusterip-svc -o yaml 
+  414  kubectl get po 
+  415  kubectl exec -it busybox -- sh
+  416  cd kubernetes-sm2/
+  417  mkdir day2
+  418  cd day2
+  419  ls -la ../day1
+  420  kubectl apply -f ../day1/busybox.yaml -n softwaremind 
+  421  kubectl get po -n softwaremind 
+  422  kubectl exec -it -n softwaremind busybox -- sh
+  423  kubectl get po
+  424  kubectl expose pod web1 --name web1-nodeport-svc --port 80 --type NodePort 
+  425  kubectl get svc
+  426  kubectl get po -o wide
+  427  kubectl exec -it web1 -- basg
+  428  kubectl exec -it web1 -- bash
+  429  kubectl edit svc web1-nodeport-svc 
+  430  kubectl get svc
+  431  kubectl get pod,ep,svc 
+  432  kubectl get pod,ep,svc -o wide
+  433  kubectl expose pod web1 --name web1-lb-svc --port 80 --type LoadBalancer
+  434  kubecget svc
+  435  kubec get svc
+  436  kubectl get svc
+  437  kubectl edit svc web1-lb-svc 
+  438  kubectl get svc
+  439  kubectl get po -o wide
+  440  kubectl exec -it busybox -- sh
+  441  kubectl api-resources | grep endpoint
+  442  kubectl get endpointslices.discovery.k8s.io 
+  443  kubectl get ep
+  444  vi my-replicaset.yaml
+  445  kubectl apply -f my-replicaset.yaml 
+  446  kubectl get rs,pod 
+  447  vi my-replicaset.yaml 
+  448  kubectl replace --force -f my-replicaset.yaml
+  449  kubectl get rs,pod 
+  450  kubectl get rs,pod --show-labels 
+  451  kubectl label pod busybox tier=frontend 
+  452  kubectl get rs,pod --show-labels 
+  453  kubectl label pod busybox tier-
+  454  kubectl get rs,pod --show-labels 
+  455  kubectl scale rs my-replicaset --replicas 10
+  456  kubectl get rs,pod --show-labels 
+  457  kubectl scale rs my-replicaset --replicas 1
+  458  kubectl get rs,pod --show-labels 
+  459  watch -n1 kubectl get rs,pod --show-labels 
+  460  kubectl scale rs my-replicaset --replicas 10
+  461  kubectl get rs,pod --show-labels 
+  462  kubectl get rs,pod -o wide
+  463  kubectl get rs,pod -o wide | grep worker1
+  464  kubectl get rs,pod -o wide | grep worker1 | wc -l
+  465  kubectl get rs,pod -o wide | grep worker2 | wc -l
+  466  vi nginx-deployment.yaml
+  467  kubectl apply -f nginx-deployment.yaml 
+  468  kubectl get deploy,rs,pod 
+  469  vi nginx-deployment.yaml
+  470  kubectl get deploy,rs,pod 
+  471  kubectl edit deployments.apps nginx-deployment 
+  472  kubectl describe deployments.apps 
+  473  kubectl edit deployments.apps nginx-deployment 
+  474  kubectl scale deployment nginx-deployment --replicas 10
+  475  kubectl get pod 
+  476  watch -n1 kubectl get pod 
+  477  vi nginx-deployment.yaml 
+  478  kubectl set image deployments nginx-deployment nginx=nginx:1.19.2
+  479  kubectl rollout status deployment nginx-deployment 
+  480  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="update image from 1.14.2 to 1.19.2, implementer: MArcin, date 9.12.2025" 
+  481  kubectl rollout history deployment nginx-deployment  
+  482  kubectl edit deployments.apps nginx-deployment 
+  483  kubectl rollout status deployment nginx-deployment 
+  484  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="update image to latest version, DO NOT USE IT ON PROD" 
+  485  kubectl rollout status deployment nginx-deployment 
+  486  kubectl rollout history deployment nginx-deployment  
+  487  kubectl set image deployments nginx-deployment nginx=nginx:broken
+  488  kubectl rollout status deployment nginx-deployment 
+  489  kubectl rollout history deployment nginx-deployment  
+  490  kubectl rollout undo deployment nginx-deployment --to-revision 2
+  491  kubectl rollout history deployment nginx-deployment  
+  492  kubectl get rs,deploy 
+  493  kubectl describe rs nginx-deployment-764d76db5f 
+  494  kubectl get rs 
+  495  kubectl get rs --no-headers | awk '{print $1}'
+  496  for i in `kubectl get rs --no-headers | awk '{print $1}'` do; echo $i ; done
+  497  for i in `kubectl get rs --no-headers | awk '{print $1}'`; do echo $i ; done
+  498  for i in `kubectl get rs --no-headers | awk '{print $1}'`; do kubectl describe rs $i | grep revision ; done
+  499  for i in `kubectl get rs --no-headers | awk '{print $1}'`; do echo $i; kubectl describe rs $i | grep revision ; done
+  500  kubectl delete rs nginx-deployment-647677fc66 
+  501  kubectl rollout history deployment nginx-deployment  
+  502  kubectl edit deployments.apps nginx-deployment 
+  503  kubectl set image deployments nginx-deployment nginx=nginx:broken
+  504  kubectl set image deployments nginx-deployment nginx=nginx:1.14.2
+  505  kubectl rollout restart deployment nginx-deployment 
+  506  kubectl edit deployments.apps nginx-deployment 
+  507  kubectl rollout restart deployment nginx-deployment 
+  508  kubectl edit deployments.apps nginx-deployment 
+  509  kubectl rollout restart deployment nginx-deployment 
+  510  kubectl get po -o wide
+  511  kubectl get po -o wide | grep worker1 | wc -l
+  512  kubectl get po -o wide | grep worker2 | wc -l
+  513  kubectl drain worker2 --ignore-daemonsets 
+  514  kubectl drain worker2 --ignore-daemonsets --delete-emptydir-data 
+  515  kubectl get node 
+  516  kubectl get po -o wide | grep worker2 | wc -l
+  517  kubectl get po -o wide | grep worker1 | wc -l
+  518  kubectl get po -o wide
+  519  kubectl drain worker2 --ignore-daemonsets --delete-emptydir-data --force 
+  520  kubectl get node 
+  521  kubectl get po -o wide
+  522  kubectl uncordon worker2
+  523  kubectl get node 
+  524  kubectl get po -o wide
+  525  kubectl rollout restart deployment nginx-deployment 
+  526  kubectl get po -o wide
+  527  kubectl get po -o wide | grep worker2 | wc -l
+  528  kubectl get po -o wide | grep worker1 | wc -l
+  529  vi nginx-deployment.yaml 
+  530  kubectl describe deployments.apps nginx-deployment 
+  531  vi nginx-deployment.yaml 
+  532  kubectl apply -f nginx-deployment.yaml
+  533  kubectl get po -o wide
+  534  kubectl rollout history deployment nginx-deployment 
+  535  vi nginx-deployment.yaml 
+  536  kubectl apply -f nginx-deployment.yaml
+  537  kubectl get po -o wide
+  538  kubectl rollout history deployment nginx-deployment 
+  539  kubectl set image deployments nginx-deployment nginx=nginx:test123 --record 
+  540  kubectl get pod
+  541  kubectl rollout history deployment nginx-deployment 
+  542  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="update image to bad version" 
+  543  kubectl rollout history deployment nginx-deployment 
+  544  kubectl get node | grep -i taint
+  545  kubectl describe node | grep -i taint
+  546  cp nginx-deployment.yaml my-daemonset.yaml
+  547  vi my-daemonset.yaml
+  548  kubectl apply -f my-daemonset.yaml
+  549  kubectl get ds,po -o wide
+  550  vi my-daemonset.yaml
+  551  kubectl apply my-daemonset.yaml
+  552  kubectl apply -f my-daemonset.yaml
+  553  kubectl get ds,po -o wide
+  554  kubectl rollout restart ds my-daemonset 
+  555  kubectl get ds,po -o wide
+  556  kubectl get ingressclasses.networking.k8s.io 
+  557  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.0/deploy/static/provider/baremetal/deploy.yaml
+  558  kubectl get all -m ingress-nginx
+  559  kubectl get all -n ingress-nginx
+  560  watch -n1 kubectl get all -n ingress-nginx
+  561  kubectl get pod
+  562  kubectl delete all --all 
+  563  kubectl get po
+  564  kubectl get svc -n ingress-nginx 
+  565  kubectl edit -n ingress-nginx svc ingress-nginx-controller
+  566  kubectl get svc -n ingress-nginx 
+  567  kubectl create deployment dogs --image nginx --replicas 1 
+  568  kubectl create deployment cats --image nginx --replicas 1 
+  569  kubectl expose deployment cats --name cats-svc --port 80
+  570  kubectl expose deployment dogs --name dogs-svc --port 80
+  571  vi index-cats.html
+  572  vi index-dogs.html
+  573  kubectl get pod
+  574  kubectl cp index-cats.html cats-6968b6c8bd-57skn:/usr/share/nginx/html/index.html 
+  575  kubectl cp index-dogs.html dogs-6b8769994b-sj46d:/usr/share/nginx/html/index.html
+  576  vi web-ingress.yaml
+  577  kubectl get ingressclasses.networking.k8s.io 
+  578  vi web-ingress.yaml
+  579  kubectl apply -f web-ingress.yaml
+  580  kubectl describe ingress web-ingress 
+  581  vi web-ingress.yaml 
+  582  kubectl apply -f web-ingress.yaml
+  583  kubectl describe ingress web-ingress 
+  584  openssl req -newkey rsa:2048 -nodes -keyout website.key -out website.csr 
+  585  openssl x509 -signkey website.key -in website.csr -req -days 365 -out website.crt 
+  586  ls -la 
+  587  kubectl create secret tls myweb-ssl-cert -key website.key --cert website.crt 
+  588  kubectl create secret tls myweb-ssl-cert --key website.key --cert website.crt 
+  589  kubectl get secrets myweb-ssl-cert -o yaml
+  590  vi web-ingress.yaml 
+  591  kubectl apply -f web-ingress.yaml
+  592  kubectl describe ingress web-ingress 
+  593  kubectl get ingressclasses.networking.k8s.io 
+  594  kubectl edit ingressclasses.networking.k8s.io 
+  595  kubectl get ingressclasses.networking.k8s.io 
+  596  kubectl edit ingressclasses.networking.k8s.io 
+  597  kubectl describe ingressclasses.networking.k8s.io 
+  598  cp web-ingress.yaml web2-ingress.yaml
+  599  vi web2-ingress.yaml
+  600  kubectl apply -f web2-ingress.yaml 
+  601  vi web2-ingress.yaml
+  602  kubectl apply -f web2-ingress.yaml 
+  603  vi web2-ingress.yaml
+  604  kubectl apply -f web2-ingress.yaml 
+  605  kubectl describe ingress web2-ingress 
+  606  kubectl kustomize "https://github.com/nginx/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v2.2.1" | kubectl apply -f -
+  607  kubectl apply --server-side -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/crds.yaml
+  608  kubectl apply -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/default/deploy.yaml
+  609  kubectl get po -n nginx-gateway 
+  610  kubectl get ingressclasses.networking.k8s.io 
+  611  kubectl get gatewayclasses.gateway.networking.k8s.io 
+  612  vi cafe-app.yaml
+  613  kubectl get svc -n nginx-gateway 
+  614  kubectl edit svc -n ingress-nginx 
+  615  kubectl get svc -n nginx-gateway 
+  616  kubectl edit -n nginx-gateway svc nginx-gateway 
+  617  kubectl get svc -n nginx-gateway 
+  618  vi cafe-app.yaml 
+  619  kubectl apply -f cafe-app.yaml 
+  620  kubectl get po 
+  621  kubectl describe httproutes.gateway.networking.k8s.io coffee 
+  622  vi cafe-app.yaml 
+  623  kubectl edit -n nginx-gateway svc nginx-gateway 
+  624  kubectl apply -f cafe-app.yaml 
+  625  kubectl edit -n nginx-gateway svc nginx-gateway 
+  626  kubectl get po gateway-nginx-6b448bf876-vchcr 
+  627  kubectl get po gateway-nginx-6b448bf876-vchcr  -o yaml
+  628  kubectl describe httproutes.gateway.networking.k8s.io coffee 
+  629  vi cafe-app.yaml 
+  630  kubectl get po gateway-nginx-6b448bf876-vchcr  -o yaml
+  631  curl --resolve cafe.example.com:80:10.0.2.171 http://cafe.example.com:80/coffee
+  632  kubectl get svc 
+  633  kubectl edit svc gateway-nginx 
+  634  kubectl get svc 
+  635  kubectl edit svc gateway-nginx 
+  636  kubectl get svc 
+  637  kubectl get svc -A 
+  638  vi cafe-app.yaml 
+  639  curl --resolve cafe.example.com:80:10.0.2.171 http://cafe.example.com:80/tea
+  640  curl --resolve cafe.example.com:80:10.0.2.171 http://cafe.example.com:80/coffee
+  641  kubectl delete -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/default/deploy.yaml
+  642  kubectl delete -f cafe-app.yaml 
+  643  kubectl delete -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/default/deploy.yaml
+  644  kubectl delete --server-side -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/crds.yaml
+  645  kubectl delete -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.2.1/deploy/crds.yaml
+  646  helm list 
+  647  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+  648  chmod +x get_helm.sh 
+  649  ./get_helm.sh 
+  650  kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+  651  helm install ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric --create-namespace --namespace nginx-gateway
+  652  helm list
+  653  helm list -A
+  654  kubectl get all -n nginx-gateway
+  655  kubectl get svc ngf-nginx-gateway-fabric --namespace nginx-gateway
+  656  kubectl -n nginx-gateway patch svc ngf-nginx-gateway-fabric --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "LoadBalancer"}]'
+  657  kubectl -n nginx-gateway patch svc ngf-nginx-gateway-fabric -p '{"spec":{"externalIPs":["192.168.189.128"]}}'
+  658  kubectl get svc ngf-nginx-gateway-fabric --namespace nginx-gateway
+  659  vi test-gateway-api.yaml
+  660  kubectl apply -f test-gateway-api.yaml 
+  661  vi test-gateway-api.yaml
+  662  kubectl apply -f test-gateway-api.yaml 
+  663  kubectl describe httproute test-app-route
+  664  kubectl expose deployment test-app --name test-app-service --port 80 -o yaml --dry-run=client
+  665  vi test-gateway-api.yaml 
+  666  kubectl apply -f test-gateway-api.yaml 
+  667  kubectl describe httproute test-app-route
+  668  kubectl get events -n nginx-gateway 
+  669  kubectl get events -n nginx-gateway --sort-by .lastTimestamp
+  670  kubectl logs -n nginx-gateway ngf-nginx-gateway-fabric-6b8d7cb8bd-z67mw 
+  671  kubectl logs gateway-nginx-6b448bf876-vchcr 
+  672  kubectl get po
+  673  kubectl delete po nginx-gateway-nginx-75c979499f-cgxzm
+  674  kubectl get po
+  675  kubectl logs nginx-gateway-nginx-75c979499f-jn842 
+  676  kubectl logs nginx-gateway-nginx-75c979499f-jn842 -f
+  677  kubectl delete ingressclasses.networking.k8s.io nginx 
+  678  kubectl get gatewayclasses.gateway.networking.k8s.io 
+  679  vi test-gateway-api.yaml 
+  680  curl -H "Host: test.192.168.189.128.nip.io" http://192.168.189.128
+  681  kubectl describe httproutes.gateway.networking.k8s.io 
+  682  kubectl get svc 
+  683  curl -H "Host: test.192.168.189.128.nip.io" http://192.168.189.128:31893 
+  684  kubectl edit svc nginx-gateway-nginx 
+  685  kubectl get svc 
+  686  kubectl get deployments.apps 
+  687  kubectl rollout restart deployment cats 
+  688  kubectl get svc
+  689  curl http://10.110.205.13 
+  690  curl http://10.104.238.253
+  691  kubectl rollout restart deployment dogs
+  692  curl http://10.104.238.253
+  693  sudo apt-get install nfs-common cifs-utils nfs-kernel-server -y
+  694  kubectl get nodes
+  695  kubectl get pods
+  696  sudo apt-get install nfs-common cifs-utils nfs-kernel-server -y
+  697  sudo mkdir /var/nfs-share
+  698  sudo chown -R nobody:nogroup /var/nfs-share 
+  699  sudo chmod 777 /var/nfs-share
+  700  sudo vi /etc/exports 
+  701  vi /etc/hosts
+  702  sudo vi /etc/hosts
+  703  sudo exportfs -rav
+  704  cat /etc/exports 
+  705  kubectl run volume-pod --image nginx -o yaml --dry-run=client > volume-pod.yaml
+  706  vi volume-pod.yaml
+  707  echo "<html><body><h1>Siema z NFS POda</h1></body></html>" > /var/nfs-share/index.html
+  708  cat /var/nfs-share/index.html
+  709  kubectl apply -f volume-pod.yaml 
+  710  kubectl get pod 
+  711  kubectl events 
+  712  kubectl get pod 
+  713  kubectl replace --force -f volume-pod.yaml 
+  714  kubectl get pod 
+  715  kubectl events 
+  716  kubectl expose pod volume-pod --name volume-pod-svc --type NodePort --port 80
+  717  kubectl get svc
+  718  cd kubernetes-sm2/day2/
+  719  vi test-pv.yaml
+  720  kubectl get sc 
+  721  vi test-pv.yaml
+  722  vi test-pvc.yaml
+  723  kubectl apply -f test-pv.yaml -f test-pvc.yaml 
+  724  kubectl get pv,pvc
+  725  kubectl delete pvc test-pvc 
+  726  vi test-pvc.yaml 
+  727  kubectl apply -f test-pv.yaml -f test-pvc.yaml 
+  728  kubectl get pv,pvc
+  729  vi nfs-volume-pod.yaml
+  730  kubectl apply -f nfs-volume-pod.yaml
+  731  kubectl get po 
+  732  kubectl get po -o wide
+  733  curl http://10.0.2.217
+  734  curl http://10.0.2.61
+  735  kubectl get sc
+  736  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.32/deploy/local-path-storage.yaml
+  737  kubectl -n local-path-storage get all 
+  738  kubectl get sc
+  739  cp -rp test-pvc.yaml dynamic-pvc.yaml 
+  740  vi dynamic-pvc.yaml
+  741  cp -rp nfs-volume-pod.yaml dynamic-nfs-pod.yaml
+  742  vi dynamic-nfs-pod.yaml
+  743  kubectl get pv,pvc
+  744  kubectl apply -f dynamic-pvc.yaml 
+  745  kubectl get pv,pvc
+  746  kubectl apply -f dynamic-nfs-pod.yaml 
+  747  kubectl get pv,pvc
+  748  kubectl delete -f dynamic-nfs-pod.yaml -f dynamic-pvc.yaml 
+  749  kubectl get pv,pvc
+  750  kubectl get pod 
+  751  vi nfs-volume-pod.yaml 
+  752  kubectl exec -it nfs-volume-pod -- bash
+  753  cd ..
+  754  git status
+  755  git add .
+  756  git commit -m "add day2 files"
+  757  git push
+  758  history
+  759  kubectl get nodes.po
+  760  kubectl get nodes,po
+  761  mkdir day3
+  762  cd day3
+  763  vi my-configmap.yaml
+  764  kubectl apply -f my-configmap.yaml
+  765  kubectl get cm 
+  766  kubectl describe cm my-configmap 
+  767  cat /etc/ssh/sshd_config | grep -v "#"
+  768  vi ssh-config
+  769  kubectl create cm ssh --from-file ssh-config 
+  770  kubectl describe cm ssh 
+  771  kubectl delete cm ssh 
+  772  kubectl create cm ssh --from-file=ssh_config=ssh-config 
+  773  kubectl describe cm ssh 
+  774  vi envFile 
+  775  kubectl create cm fromEnvFile --from-env-file envFile  
+  776  kubectl create cm from-env-file --from-env-file envFile  
+  777  kubectl describe cm from-env-file 
+  778  kubectl create cm test-cm --from-literal username=root --from-literal branchName=main-1.0 --from-file /etc/ssh/sshd_config
+  779  kubectl describe cm test-cm 
+  780  vi configmap-pod.yaml
+  781  kubectl apply -f configmap-pod.yaml 
+  782  kubectl get po
+  783  kubectl events
+  784  kubectl get node
+  785  kubectl get po
+  786  df -h
+  787  vi configmap-pod.yaml
+  788  kubectl run test --image nginx 
+  789  kubectl get po
+  790  kubectl delete pod configmap-pod 
+  791  kubectl apply -f configmap-pod.yaml 
+  792  kubectl get po
+  793  kubectl events
+  794  kubectl get po
+  795  vi configmap-pod.yaml 
+  796  kubectl replcae --force  -f configmap-pod.yaml 
+  797  kubectl replace --force  -f configmap-pod.yaml 
+  798  kubectl get po
+  799  kubectl exec -it configmap-pod -- bash
+  800  kubectl exec -it configmap-pod -- sh
+  801  cp configmap-pod.yaml configmap-volume-pod.yaml 
+  802  vi configmap-volume-pod.yaml
+  803  kubectl apply -f configmap-volume-pod.yaml
+  804  kubectl get po
+  805  kubectl exec -it configmap-volume-pod -- sh
+  806  kubectl edit cm my-configmap 
+  807  kubectl exec -it configmap-volume-pod -- sh
+  808  kubectl create secret generic my-secret --from-
+  809  kubectl create secret generic my-secret --from-literal username=root --from-literal password=securepass123 
+  810  kubectl get secrets 
+  811* kubectl describe secrets my-secret 
+  812  kubectl get secrets my-secret -o yaml 
+  813  echo 'c2VjdXJlcGFzczEyMw==' | base64 -d 
+  814  kubectl create secret docker-registry my-repo-creds --docker-server myharbor.lab.local --docker-username marcink --docker-password securepass123 
+  815  kubectl get secrets 
+  816  kubectl describe secrets my-repo-creds 
+  817  kubectl get secrets my-repo-creds -o yaml
+  818  echo 'eyJhdXRocyI6eyJteWhhcmJvci5sYWIubG9jYWwiOnsidXNlcm5hbWUiOiJtYXJjaW5rIiwicGFzc3dvcmQiOiJzZWN1cmVwYXNzMTIzIiwiYXV0aCI6ImJXRnlZMmx1YXpwelpXTjFjbVZ3WVhOek1USXoifX19' | base64 -d && echo 
+  819  echo 'bWFyY2luazpzZWN1cmVwYXNzMTIz'|base64 -d 
+  820  htpasswd -c .htpasswd john 
+  821  sudo apt install apache2-utils
+  822  htpasswd -c .htpasswd john 
+  823  cat .htpasswd 
+  824  kubectl create secret generic nginx-htpasswd --from-file .htpasswd 
+  825  rm .htpasswd 
+  826  kubectl get secrets nginx-htpasswd 
+  827  vi nginx-config.yaml
+  828  kubectl apply -f nginx-config.yaml
+  829  kubectl create deployment nginx-secure --replicas 1 --image nginx --dry-run=client -o yaml > nginx-secure.yaml
+  830  vi nginx-secure.yaml
+  831  kubectl apply -f nginx-secure.yaml
+  832  kubectl get po
+  833  kubectl events
+  834  kubectl get secrets 
+  835  vi nginx-secure.yaml 
+  836  kubectl get po
+  837  vi nginx-secure.yaml 
+  838  kubectl delete deployments.apps nginx-secure 
+  839  kubectl apply -f nginx-secure.yaml
+  840  kubectl get po
+  841  kubectl expose deployment nginx-secure --name nginx-secure-svc --port 80 --type NodePort
+  842  kubectl get svc
+  843  vi todo-app.yaml
+  844  kubectl get ingressclasses.networking.k8s.io 
+  845  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.7.1/deploy/static/provider/baremetal/deploy.yaml
+  846  kubectl get ingressclasses.networking.k8s.io 
+  847  kubectl get po -n ingress-nginx 
+  848  kubectl get svc -n ingress-nginx 
+  849  kubectl patch svc ingress-nginx-controller -n ingress-nginx --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "LoadBalancer"}]'
+  850  kubectl patch svc ingress-nginx-controller -n ingress-nginx -p '{"spec":{"externalIPs":["192.168.189.128"]}}'
+  851  kubectl get svc -n ingress-nginx 
+  852  kubectl apply -f todo-app.yaml 
+  853  watch -n1 kubectl get all -n todo-app 
+  854  kubectl get svc -n todo-app 
+  855  kubectl get pv,pvc -n todo-app 
+  856  kubectl describe ingress -n todo-app 
+  857  kubectl rollout restart deployment -n todo-app frontend 
+  858  kubectl rollout restart deployment -n todo-app backend 
+  859  kubectl rollout restart -n todo-app statefulset postgres 
+  860  kubectl get all -n todo-app 
+  861  cd ..
+  862  git status 
+  863  git add .
+  864  git commit -m "add day 3 files"
+  865  history > history.txt 
